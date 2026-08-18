@@ -13,7 +13,6 @@ import bpy
 from . import panel
 from . import convert_operator
 from . import export 
-from . import setup_scene
 
 # Registration
 classes = [
@@ -21,7 +20,6 @@ classes = [
     convert_operator.RIGIFYTOUNREAL_OT_execute,
     export.RIGIFYTOUNREAL_PT_export_settings,
     export.RIGIFYTOUNREAL_OT_export,
-    setup_scene.RIGIFYTOUNREAL_OT_setup_scene
 ]
 
 def register():

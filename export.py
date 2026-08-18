@@ -198,6 +198,14 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
         if not export_path.lower().endswith('.fbx'):
             export_path += '.fbx'
         
+        # Setup Unreal unit scale
+        
+        original_unit_system = scene.unit_settings.system
+        original_unit_scale = scene.unit_settings.scale_length
+        
+        scene.unit_settings.system = 'METRIC'
+        scene.unit_settings.scale_length = 0.01
+        
         # Apply scale to objects (scale them up by 100)
         export_scale = scene.rigify_to_unreal_fbx_scale
         
@@ -261,6 +269,9 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
                 rig_obj.select_set(True)
                 context.view_layer.objects.active = rig_obj
                 bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+                
+            scene.unit_settings.system = original_unit_system
+            scene.unit_settings.scale_length = original_unit_scale
         
         return {'FINISHED'}
     
@@ -317,10 +328,6 @@ class RIGIFYTOUNREAL_PT_export_settings(bpy.types.Panel):
         row = box.row(align=True)
         row.prop(scene, "rigify_to_unreal_export_nla_strips", text="NLA Strips")
         row.prop(scene, "rigify_to_unreal_export_all_actions", text="All Actions")
-        
-        row = layout.row()
-        row.scale_y = 1.5
-        row.operator("rigify_to_unreal.setup_scene", text="Setup Scene", icon='SCENE')
         
         row = layout.row()
         row.scale_y = 1.5
