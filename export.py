@@ -233,6 +233,7 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
             filepath=export_path,
             use_selection=True,
             global_scale=1.0,
+            apply_unit_scale=True,
             apply_scale_options=scene.rigify_to_unreal_fbx_apply_scale,
             axis_forward=scene.rigify_to_unreal_fbx_forward,
             axis_up=scene.rigify_to_unreal_fbx_up,
@@ -252,13 +253,14 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
             self.report({'ERROR'}, f"Export failed: {str(e)}")
             return {'CANCELLED'}
         
-        if rig_obj:
-            rig_obj.scale /= export_scale
-            
-            bpy.ops.object.select_all(action='DESELECT')
-            rig_obj.select_set(True)
-            context.view_layer.objects.active = rig_obj
-            bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
+        finally:
+            if rig_obj:
+                rig_obj.scale /= export_scale
+                
+                bpy.ops.object.select_all(action='DESELECT')
+                rig_obj.select_set(True)
+                context.view_layer.objects.active = rig_obj
+                bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         
         return {'FINISHED'}
     
