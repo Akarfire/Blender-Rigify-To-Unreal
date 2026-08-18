@@ -1,0 +1,86 @@
+import bpy
+
+class Renamer:
+    
+    def rename_bones(rig):
+        """Rename bones to match Unreal Engine naming conventions"""
+        
+        renaming_list = {
+            "DEF-spine"         : "pelvis",
+            "DEF-spine.001"     : "spine_01",
+            "DEF-spine.002"     : "spine_02",
+            "DEF-spine.003"     : "spine_03",
+            "DEF-spine.004"     : "neck_01",
+            "DEF-spine.006"     : "head",
+            "DEF-shoulder.L"    : "clavicle_l",
+            "DEF-upper_arm.L"   : "upperarm_l",
+            "DEF-forearm.L"     : "lowerarm_l",
+            "DEF-hand.L"        : "hand_l",
+            "DEF-thumb.01.L"    : "thumb_01_l",
+            "DEF-thumb.02.L"    : "thumb_02_l",
+            "DEF-thumb.03.L"    : "thumb_03_l",
+            "DEF-palm.01.L"     : "palm_index_l",
+            "DEF-f_index.01.L"  : "index_01_l",
+            "DEF-f_index.02.L"  : "index_02_l",
+            "DEF-f_index.03.L"  : "index_03_l",
+            "DEF-palm.02.L"     : "palm_middle_l",
+            "DEF-f_middle.01.L" : "middle_01_l",
+            "DEF-f_middle.02.L" : "middle_02_l",
+            "DEF-f_middle.03.L" : "middle_03_l",
+            "DEF-palm.03.L"     : "palm_ring_l",
+            "DEF-f_ring.01.L"   : "ring_01_l",
+            "DEF-f_ring.02.L"   : "ring_02_l",
+            "DEF-f_ring.03.L"   : "ring_03_l",
+            "DEF-palm.04.L"     : "palm_pinky_l",
+            "DEF-f_pinky.01.L"  : "pinky_01_l",
+            "DEF-f_pinky.02.L"  : "pinky_02_l",
+            "DEF-f_pinky.03.L"  : "pinky_03_l",
+            "DEF-shoulder.R"    : "clavicle_r",
+            "DEF-upper_arm.R"   : "upperarm_r",
+            "DEF-forearm.R"     : "lowerarm_r",
+            "DEF-hand.R"        : "hand_r",
+            "DEF-thumb.01.R"    : "thumb_01_r",
+            "DEF-thumb.02.R"    : "thumb_02_r",
+            "DEF-thumb.03.R"    : "thumb_03_r",
+            "DEF-palm.01.R"     : "palm_index_r",
+            "DEF-f_index.01.R"  : "index_01_r",
+            "DEF-f_index.02.R"  : "index_02_r",
+            "DEF-f_index.03.R"  : "index_03_r",
+            "DEF-palm.02.R"     : "palm_middle_r",
+            "DEF-f_middle.01.R" : "middle_01_r",
+            "DEF-f_middle.02.R" : "middle_02_r",
+            "DEF-f_middle.03.R" : "middle_03_r",
+            "DEF-palm.03.R"     : "palm_ring_r",
+            "DEF-f_ring.01.R"   : "ring_01_r",
+            "DEF-f_ring.02.R"   : "ring_02_r",
+            "DEF-f_ring.03.R"   : "ring_03_r",
+            "DEF-palm.04.R"     : "palm_pinky_r",
+            "DEF-f_pinky.01.R"  : "pinky_01_r",
+            "DEF-f_pinky.02.R"  : "pinky_02_r",
+            "DEF-f_pinky.03.R"  : "pinky_03_r",
+            "DEF-thigh.L"       : "thigh_l",
+            "DEF-shin.L"        : "calf_l",
+            "DEF-foot.L"        : "foot_l",
+            "DEF-toe.L"         : "ball_l",
+            "DEF-thigh.R"       : "thigh_r",
+            "DEF-shin.R"        : "calf_r",
+            "DEF-foot.R"        : "foot_r",
+            "DEF-toe.R"         : "ball_r",
+            
+            "DEF-upper_arm.L.001" : "upperarm_twist_02_l",
+            "DEF-forearm.L.001"   : "lowerarm_twist_01_l",
+            "DEF-upper_arm.R.001" : "upperarm_twist_02_r",
+            "DEF-forearm.R.001"   : "lowerarm_twist_01_r",
+            "DEF-thigh.L.001"     : "thigh_twist_02_l",
+            "DEF-shin.L.001"      : "calf_twist_01_l",
+            "DEF-thigh.R.001"     : "thigh_twist_02_r",
+            "DEF-shin.R.001"      : "calf_twist_01_r",
+            
+            "DEF-breast.L"        : "breast_l",
+            "DEF-breast.R"        : "breast_r",
+        }
+        
+        for old_name, new_name in renaming_list.items():
+            pose_bone = rig.pose.bones.get(old_name)
+            if pose_bone:
+                pose_bone.name = new_name
