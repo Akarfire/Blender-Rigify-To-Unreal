@@ -181,10 +181,15 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
         rig_obj = scene.rigify_to_unreal_converted_rig
         meshes = utility.get_meshes_attached_to_rig(rig_obj)
         
+        # Validate objects
+        if (not len(meshes) > 0 and scene.rigify_to_unreal_export_mesh) or not rig_obj:
+            self.report({'ERROR'}, "No objects to export!")
+            return {'CANCELLED'}
+        
         # Get export path
         export_path = scene.rigify_to_unreal_export_filepath
         
-        # Validate objects and path
+        # Validate path
         if not export_path:
             self.report({'ERROR'}, "Export path not set!")
             return {'CANCELLED'}
@@ -192,31 +197,26 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
         # Ensure .fbx extension
         if not export_path.lower().endswith('.fbx'):
             export_path += '.fbx'
-            
-        # Store original object scales
-        original_scales = {}
         
         # Apply scale to objects (scale them up by 100)
         export_scale = scene.rigify_to_unreal_fbx_scale
         
         rig_obj.scale *= export_scale
         
-        # Deselect all objects first
         bpy.ops.object.select_all(action='DESELECT')
-        
-        # Check if we have at least one object to export
-        if not len(meshes) > 0 and not rig_obj:
-            self.report({'ERROR'}, "No objects to export!")
-            return {'CANCELLED'}
+        rig_obj.select_set(True)
+        context.view_layer.objects.active = rig_obj
+        bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         
         # Deselect all objects first
         bpy.ops.object.select_all(action='DESELECT')
         
         # Select objects based on export options
-        for mesh_obj in meshes:
-            if mesh_obj:
-                mesh_obj.select_set(True)
-                context.view_layer.objects.active = mesh_obj
+        if scene.rigify_to_unreal_export_mesh:
+            for mesh_obj in meshes:
+                if mesh_obj:
+                    mesh_obj.select_set(True)
+                    context.view_layer.objects.active = mesh_obj
         
         if scene.rigify_to_unreal_export_armature and rig_obj:
             rig_obj.select_set(True)
@@ -254,6 +254,11 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
         
         if rig_obj:
             rig_obj.scale /= export_scale
+            
+            bpy.ops.object.select_all(action='DESELECT')
+            rig_obj.select_set(True)
+            context.view_layer.objects.active = rig_obj
+            bpy.ops.object.transform_apply(location=False, rotation=False, scale=True)
         
         return {'FINISHED'}
     
@@ -310,6 +315,10 @@ class RIGIFYTOUNREAL_PT_export_settings(bpy.types.Panel):
         row = box.row(align=True)
         row.prop(scene, "rigify_to_unreal_export_nla_strips", text="NLA Strips")
         row.prop(scene, "rigify_to_unreal_export_all_actions", text="All Actions")
+        
+        row = layout.row()
+        row.scale_y = 1.5
+        row.operator("rigify_to_unreal.setup_scene", text="Setup Scene", icon='SCENE')
         
         row = layout.row()
         row.scale_y = 1.5
