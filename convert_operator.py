@@ -61,9 +61,17 @@ class RIGIFYTOUNREAL_OT_execute(bpy.types.Operator):
             
             modified_mesh.name = mesh_obj.name + "_Converted"
             scene.collection.objects.link(modified_mesh)
-            
+
             mesh_obj.hide_viewport = True
             mesh_obj.hide_set(True)
+        
+            # Clearing old parent
+            bpy.ops.object.select_all(action='DESELECT')
+                        
+            modified_mesh.select_set(True)
+            context.view_layer.objects.active = modified_mesh
+            
+            bpy.ops.object.parent_clear(type='CLEAR')
         
             # Parenting modified_mesh to the deform_rig
             bpy.ops.object.select_all(action='DESELECT')
