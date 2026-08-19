@@ -186,6 +186,11 @@ class RIGIFYTOUNREAL_OT_export(bpy.types.Operator):
             self.report({'ERROR'}, "No objects to export!")
             return {'CANCELLED'}
         
+        # Validate rig name
+        if rig_obj.name != "Armature":
+            self.report({'ERROR'}, "Converted rig MUST be called 'Armature'!")
+            return {'CANCELLED'}
+        
         # Get export path
         export_path = scene.rigify_to_unreal_export_filepath
         
