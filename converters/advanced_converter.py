@@ -33,7 +33,7 @@ class AdvancedConverter:
         }
         
         if not context.scene.rigify_to_unreal_keep_breasts:
-            merge_targets += {
+            merge_targets | {
                 "DEF-breast.L"        : ("DEF-spine.003",       1.0, 1.0),
                 "DEF-breast.R"        : ("DEF-spine.003",       1.0, 1.0),
             }
@@ -105,7 +105,7 @@ class AdvancedConverter:
         }
         
         if not context.scene.rigify_to_unreal_keep_breasts:
-            bone_removal_targets += {
+            bone_removal_targets | {
                 "DEF-breast.L"  : ("", ""),
                 "DEF-breast.R"  : ("", ""),
             }
